@@ -1,0 +1,426 @@
+import { CarryBeeFormData, StandardColumn } from '../types/form';
+
+export const defaultStandardColumns: StandardColumn[] = [
+  { id: 'sl', label: 'SL', key: 'sl', width: '48px', align: 'center' },
+  { id: 'assetName', label: 'Asset Name', key: 'assetName', width: '135px', align: 'left' },
+  { id: 'qty', label: 'Qty', key: 'qty', width: '48px', align: 'center' },
+  { id: 'tagNo', label: 'Tag No', key: 'tagNo', width: '90px', align: 'center' },
+  { id: 'remarks', label: 'Remarks', key: 'remarks', align: 'left' },
+];
+
+export const defaultCompany = {
+  name: 'CarryBee Express Ltd.',
+  address: 'House 101, Soharwardi Avenue, Baridhara Diplomatic Zone, Dhaka 1212',
+  hotline: 'IT Hotline: 01701208286',
+  formTitle: 'IT Asset Send / Received Form',
+  department: 'IT & Infrastructure Department',
+  date: '27/09/2026',
+};
+
+export const defaultParties = {
+  fromBranch: 'Head Office',
+  fromName: '[Prepared By]',
+  fromMobile: '01701208286',
+  toBranch: 'Central Sort',
+  toName: '[Sort / TNL In charge]',
+  toMobile: '',
+};
+
+export const defaultSignatures = {
+  preparedByLabel: 'Prepared By',
+  preparedByName: '',
+  authorizedByLabel: 'Authorized by',
+  authorizedByName: '',
+  receivedByLabel: 'Received by',
+  receivedByName: '',
+};
+
+export const preset1StandardITAssets: CarryBeeFormData = {
+  id: 'preset-1',
+  presetName: 'Sample 1 - Standard IT Assets (Default)',
+  company: {
+    ...defaultCompany,
+    date: '27/09/2026',
+  },
+  parties: {
+    ...defaultParties,
+  },
+  showStandardTable: true,
+  standardColumns: [...defaultStandardColumns],
+  standardItems: [
+    {
+      id: 'row-1',
+      sl: 1,
+      assetName: 'Canon LBP6030 Printer',
+      qty: 1,
+      tagNo: '-',
+      remarks: 'Mohakhali (Hub Incharge)\nRemarks: Replace\nMail: Need to Printer Toner Mohakhali Hub [September 2025]',
+    },
+    {
+      id: 'row-2',
+      sl: 2,
+      assetName: 'CPU HP, Core i5, 7rd Gen, RAM 8GB, SSD 120GB',
+      qty: 1,
+      tagNo: 'USBEX-IT-CPU-0073',
+      remarks: 'Kalabagan (Hub Incharge)\nRemarks: Replace USBEX-IT-CPU-0081\nMail: CPU Submission for IT Processing- ID: USBEX-IT-CPU-0081',
+    },
+    {
+      id: 'row-3',
+      sl: 3,
+      assetName: 'Laptop',
+      qty: 1,
+      tagNo: '387',
+      remarks: 'Central Sort (Md. Alam Shikder, CL-84682)\nRemarks: After servicing sent it back.\nRemarks: Laptop Repair Request – Alam Shikder (CL-84682)',
+    },
+    {
+      id: 'row-4',
+      sl: 4,
+      assetName: 'Laptop',
+      qty: 1,
+      tagNo: '595',
+      remarks: 'CTG-Patiya (Ainwul Ahsan Rafi, CL-84448)\nRemarks: Replace HP Probook 440 G8 Keyboard, SN# 0875322\nRemarks: IT Asset Repair – CTG-Patiya Hub – 21-09-2026',
+    },
+    {
+      id: 'row-5',
+      sl: 5,
+      assetName: 'Laptop',
+      qty: 1,
+      tagNo: '150',
+      remarks: 'Narail-Sadar (Md. Sohel Rana, CL-84024)\nRemarks: Replace HP Elitebook 850 G3 Battery, SN# COT12202404716\nRemarks: Laptop Battery Replacement Request – Narail Sadar Hub',
+    },
+    {
+      id: 'row-6',
+      sl: 6,
+      assetName: 'Laptop + Charger',
+      qty: 1,
+      tagNo: '692',
+      remarks: 'Rajshahi-Sadar (Md. Istiak Hossain, CL-84537)\nRemarks: After servicing sent it back.\nRemarks: Request for Hardware Repair/Replacement - CBE-IT-LAPTOP-0892 || Rajshahi-Sadar || 23-Sep-2026',
+    },
+    {
+      id: 'row-7',
+      sl: 7,
+      assetName: 'Headphone',
+      qty: 1,
+      tagNo: '429',
+      remarks: 'Dinajpur-Sadar (Md Foisal Rahen Jony, CL-84948)\nMail: Request for IP Phone and Headphone for New In-Charge – Dinajpur Sadar Hub',
+    },
+    {
+      id: 'row-8',
+      sl: 8,
+      assetName: 'Label Printer',
+      qty: 1,
+      tagNo: '515',
+      remarks: 'Bhulta-Gawsia (Hub Incharge)\nRemarks: Replace CBE-IT-LabelPrinter-374\nMail: Request for Urgent Printer Replacement - CBE-IT-LabelPrinter-374-(Bhulta IB)-25-09-2026',
+    },
+    {
+      id: 'row-9',
+      sl: 9,
+      assetName: 'Label Printer',
+      qty: 1,
+      tagNo: '516',
+      remarks: 'Sylhet-Dakshin Surma (Hub Incharge)\nRemarks: Replace CBE-IT-LabelPrinter-234\nMail: IT Asset Replacement [Sylhet Dakshin Surma Hub] 26-09-26',
+    },
+    {
+      id: 'row-10',
+      sl: 10,
+      assetName: 'Label Printer',
+      qty: 1,
+      tagNo: '517',
+      remarks: 'Dhonia (Hub Incharge)\nRemarks: Replace CBE-IT-LabelPrinter-392\nMail: Request for Replacement of Damaged Dotmax Label Printer - From Dhonia Hub (25-09-26)',
+    },
+    {
+      id: 'row-11',
+      sl: 11,
+      assetName: 'Laptop Charger',
+      qty: 1,
+      tagNo: '-',
+      remarks: 'Mohakhali (Md. Firoj Hasan, CL-84767)\nRemarks: Replace Power Cable\nRemarks: Request for Laptop Charger Replacement (LCL-84767)',
+    },
+    {
+      id: 'row-12',
+      sl: 12,
+      assetName: 'Label Printer',
+      qty: 1,
+      tagNo: '518',
+      remarks: 'Bagerhat-Sadar (Hub Incharge)\nRemarks: Replace CBE-IT-LabelPrinter-124\nMail: Request for G-Printer Exchange – CBE-IT-GPrinter-0124 (Bagerhat sadar) 27-09-2026',
+    },
+    {
+      id: 'row-13',
+      sl: 13,
+      assetName: 'Dotmax 2D Scanner',
+      qty: 1,
+      tagNo: '748',
+      remarks: 'Lakshmipur-Ramganj (Hub Incharge)\nRemarks: Replace CBE-IT-Scanner-0136\nMail: Replacement Of Barcode Scanner for || Lakshmipur-Ramganj 27-Sep\'2026',
+    },
+    {
+      id: 'row-14',
+      sl: 14,
+      assetName: 'Dotmax 2D Scanner',
+      qty: 1,
+      tagNo: '749',
+      remarks: 'Khulna-Paikgacha (Hub Incharge)\nRemarks: Replace CBE-IT-Scanner-0197\nMail: Replacement Request – Faulty Label Printer & Scanner | Khulna-Paikgacha Hub',
+    },
+    {
+      id: 'row-15',
+      sl: 15,
+      assetName: 'Laptop Power Cable',
+      qty: 1,
+      tagNo: '-',
+      remarks: 'Central Sort (Pranab Chandra Das, CL-84001)\nRemarks: Replace Power Cable\nRemarks: Request for Laptop Charger Power Cable Replacement (27 Sep, 2026)',
+    },
+  ],
+  customSections: [],
+  signatures: defaultSignatures,
+  hasPto: false,
+};
+
+export const preset2MultiDeviceBags: CarryBeeFormData = {
+  id: 'preset-2',
+  presetName: 'Sample 2 - Bag & Scanner Requisitions',
+  company: {
+    ...defaultCompany,
+    date: '20/09/2026',
+  },
+  parties: {
+    ...defaultParties,
+  },
+  showStandardTable: false,
+  standardColumns: [...defaultStandardColumns],
+  standardItems: [],
+  customSections: [
+    {
+      id: 'sec-bags',
+      mailSubject: 'Mail: Laptop Bag requisition',
+      sectionTitle: '3 Laptop Side Bag',
+      headerTheme: 'blue',
+      columns: [
+        { id: 'c1', label: 'Hub Name', align: 'left' },
+        { id: 'c2', label: 'E.ID', align: 'center' },
+        { id: 'c3', label: 'E. Name', align: 'left' },
+      ],
+      rows: [
+        { id: 'b1', cells: { c1: 'Manikganj-Sadar', c2: 'CL-86234', c3: 'Md. Khan Zahan Ali Sinbad' } },
+        { id: 'b2', cells: { c1: 'Rajbari-Sadar', c2: 'CL-86231', c3: 'Md. Abdul Momen Pramanik' } },
+        { id: 'b3', cells: { c1: 'Shariatpur-Sadar', c2: 'CL-86233', c3: 'Md Rakib Hossain' } },
+      ],
+    },
+    {
+      id: 'sec-scanners',
+      mailSubject: 'Mail: Regarding PTN Device Requirements for 4 Hubs',
+      sectionTitle: '5 pcs Mobile Scanner',
+      headerTheme: 'green',
+      columns: [
+        { id: 'm1', label: 'Item Name', align: 'left' },
+        { id: 'm2', label: 'Device Model', align: 'left' },
+        { id: 'm3', label: 'Asset Tracking Number', align: 'center' },
+        { id: 'm4', label: 'Workplace', align: 'center' },
+      ],
+      rows: [
+        { id: 's1', cells: { m1: 'Mobile Scanner', m2: 'Sunmi L2s Pro T8920 5.5" HD+Smart Mobile POS Terminal (3GB+32GB)', m3: 'CBE-IT-MobileScanner-053', m4: 'Boardbazer' } },
+        { id: 's2', cells: { m1: 'Mobile Scanner', m2: 'Sunmi L2s Pro T8920 5.5" HD+Smart Mobile POS Terminal (3GB+32GB)', m3: 'CBE-IT-MobileScanner-054', m4: 'Boardbazer' } },
+        { id: 's3', cells: { m1: 'Mobile Scanner', m2: 'Sunmi L2s Pro T8920 5.5" HD+Smart Mobile POS Terminal (3GB+32GB)', m3: 'CBE-IT-MobileScanner-055', m4: 'Uttara' } },
+        { id: 's4', cells: { m1: 'Mobile Scanner', m2: 'Sunmi L2s Pro T8920 5.5" HD+Smart Mobile POS Terminal (3GB+32GB)', m3: 'CBE-IT-MobileScanner-056', m4: 'Dhonia' } },
+        { id: 's5', cells: { m1: 'Mobile Scanner', m2: 'Sunmi L2s Pro T8920 5.5" HD+Smart Mobile POS Terminal (3GB+32GB)', m3: 'CBE-IT-MobileScanner-057', m4: 'Jatrabari' } },
+      ],
+    },
+  ],
+  signatures: defaultSignatures,
+  hasPto: false,
+};
+
+export const preset3MultiDeptLaptops: CarryBeeFormData = {
+  id: 'preset-3',
+  presetName: 'Sample 3 - Multi-Department Mixed Requisitions',
+  company: {
+    ...defaultCompany,
+    date: '17/09/2026',
+  },
+  parties: {
+    ...defaultParties,
+  },
+  showStandardTable: true,
+  standardTableTitle: 'Hub/Attention Person/Mail/Remarks',
+  standardColumns: [
+    { id: 'sl', label: 'SL', key: 'sl', width: '48px', align: 'center' },
+    { id: 'assetName', label: 'Asset Name', key: 'assetName', width: '130px', align: 'left' },
+    { id: 'qty', label: 'Qty', key: 'qty', width: '48px', align: 'center' },
+    { id: 'tagNo', label: 'Tag No', key: 'tagNo', width: '90px', align: 'center' },
+    { id: 'remarks', label: 'Hub/Attention Person/Mail/Remarks', key: 'remarks', align: 'left' },
+  ],
+  standardItems: [
+    {
+      id: 'r1',
+      sl: 1,
+      assetName: 'Laptop + Charger',
+      qty: 1,
+      tagNo: '488',
+      remarks: 'Chandpur-Matlab Dakshin (Md Abu Naim, CL-84217)\nRemarks: after service sent it back\nMail: Urgent Support Request: Repair/Replacement of Laptop || Chandpur-Matlab Dakshin Hub 13 sep 2026',
+    },
+    {
+      id: 'r2',
+      sl: 2,
+      assetName: 'Laptop + Charger',
+      qty: 1,
+      tagNo: '916',
+      remarks: 'Mohakhali (Md. Rakibul Islam, CL-84148)\nRemarks: Replace CBE-IT-LAPTOP-157\nMail: Laptop Handover for Repair (15-09-2026)',
+    },
+    {
+      id: 'r3',
+      sl: 3,
+      assetName: 'Headphone',
+      qty: 1,
+      tagNo: '438',
+      remarks: 'Bagerhat-Mongla (Md. Sabbir Hossain, CL-84551)\nMail: Requirement for Two Headphones for IP Call Verification [Bagerhat - Mongla Hub]',
+    },
+    {
+      id: 'r4',
+      sl: 4,
+      assetName: 'Label Printer',
+      qty: 1,
+      tagNo: '502',
+      remarks: 'Patuakhali-Kalapara (Hub Incharge)\nReplace: CBE-IT-LabelPrinter-241\nMail: Replacement Request for CBE-IT-GPrinter-241 – Patuakhali-Kalapara Hub',
+    },
+    {
+      id: 'r5',
+      sl: 5,
+      assetName: '',
+      qty: '',
+      tagNo: '',
+      remarks: '',
+    },
+  ],
+  customSections: [
+    {
+      id: 'req-sep-5',
+      mailSubject: 'Mail: Laptop Requisition of September 2026 for Multiple Departments (13/09/2026) v5.0',
+      sectionTitle: '5 Laptops + Chargers',
+      headerTheme: 'yellow',
+      columns: [
+        { id: 'c1', label: 'ID', align: 'center' },
+        { id: 'c2', label: 'Name', align: 'left' },
+        { id: 'c3', label: 'Designation', align: 'left' },
+        { id: 'c4', label: 'Department', align: 'left' },
+        { id: 'c5', label: 'Workstation', align: 'left' },
+        { id: 'c6', label: 'TN', align: 'center' },
+      ],
+      rows: [
+        { id: 'x1', cells: { c1: 'CL-84965', c2: 'Md. Raihan Munshi', c3: 'Associate', c4: 'Hub Operations (OSD)', c5: 'CTG-Nasirabad', c6: 'Laptop-115' } },
+        { id: 'x2', cells: { c1: 'CL-84966', c2: 'Kamrul Islam Bhuiyan', c3: 'Associate', c4: 'Hub Operations (OSD)', c5: 'Feni-Sadar', c6: 'Laptop-912' } },
+        { id: 'x3', cells: { c1: 'CL-84967', c2: 'Navil Kazi', c3: 'Associate', c4: 'Hub Operations (OSD)', c5: 'Feni-Sadar', c6: 'Laptop-913' } },
+        { id: 'x4', cells: { c1: 'CL-84968', c2: 'Md. Fashir Uddin Bhuiyan', c3: 'Associate', c4: 'Hub Operations (OSD)', c5: 'Feni-Sadar', c6: 'Laptop-914' } },
+        { id: 'x5', cells: { c1: 'CL-84969', c2: 'Md Abir', c3: 'Associate', c4: 'Hub Operations (OSD)', c5: 'CTG-Nasirabad', c6: 'Laptop-211' } },
+      ],
+    },
+    {
+      id: 'req-sep-2',
+      mailSubject: 'Mail: Laptop Requisition of September 2026 for Multiple Departments (02/09/2026) v2.0',
+      sectionTitle: '1 Laptop + Charger',
+      headerTheme: 'yellow',
+      columns: [
+        { id: 'c1', label: 'ID', align: 'center' },
+        { id: 'c2', label: 'Name', align: 'left' },
+        { id: 'c3', label: 'Designation', align: 'left' },
+        { id: 'c4', label: 'Department', align: 'left' },
+        { id: 'c5', label: 'Workstation', align: 'left' },
+        { id: 'c6', label: 'TN', align: 'center' },
+      ],
+      rows: [
+        { id: 'y1', cells: { c1: 'CL-84959', c2: 'Sowrov Shialy', c3: 'Associate', c4: 'Hub Operations (ISD)', c5: 'Badda', c6: 'Laptop-911' } },
+      ],
+    },
+    {
+      id: 'req-aug-25',
+      mailSubject: 'Mail: Laptop Requisition of August 2026 for Multiple Departments (25/08/2026) v10.0',
+      sectionTitle: '1 Laptop + Charger',
+      headerTheme: 'yellow',
+      columns: [
+        { id: 'c1', label: 'ID', align: 'center' },
+        { id: 'c2', label: 'Name', align: 'left' },
+        { id: 'c3', label: 'Designation', align: 'left' },
+        { id: 'c4', label: 'Department', align: 'left' },
+        { id: 'c5', label: 'Workstation', align: 'left' },
+        { id: 'c6', label: 'TN', align: 'center' },
+      ],
+      rows: [
+        { id: 'z1', cells: { c1: 'CL-84940', c2: 'Md. Yamen Hasan', c3: 'Associate', c4: 'Hub Operations (ISD)', c5: 'Badda', c6: 'Laptop-910' } },
+      ],
+    },
+    {
+      id: 'req-aug-30',
+      mailSubject: 'Mail: Laptop Requisition of August 2026 for Multiple Departments (30/08/2026) v11.0',
+      sectionTitle: '1 Laptop + Charger',
+      headerTheme: 'yellow',
+      columns: [
+        { id: 'c1', label: 'ID', align: 'center' },
+        { id: 'c2', label: 'Name', align: 'left' },
+        { id: 'c3', label: 'Designation', align: 'left' },
+        { id: 'c4', label: 'Department', align: 'left' },
+        { id: 'c5', label: 'Workstation', align: 'left' },
+        { id: 'c6', label: 'TN', align: 'center' },
+      ],
+      rows: [
+        { id: 'w1', cells: { c1: 'CL-84946', c2: 'Mohin Uddin', c3: 'Associate', c4: 'Hub Operations (OSD)', c5: 'Comilla-Barura', c6: 'Laptop-532' } },
+      ],
+    },
+    {
+      id: 'req-jun-23',
+      mailSubject: 'Mail: Laptop Requisition of June 2026 for Multiple Departments (23/06/2026) v12.0',
+      sectionTitle: '2 Laptops + Chargers',
+      headerTheme: 'yellow',
+      columns: [
+        { id: 'c1', label: 'ID', align: 'center' },
+        { id: 'c2', label: 'Name', align: 'left' },
+        { id: 'c3', label: 'Designation', align: 'left' },
+        { id: 'c4', label: 'Department', align: 'left' },
+        { id: 'c5', label: 'Workstation', align: 'left' },
+        { id: 'c6', label: 'TN', align: 'center' },
+      ],
+      rows: [
+        { id: 't1', cells: { c1: 'CL-84747', c2: 'Tonoy Das Gupta', c3: 'Associate', c4: 'OSD / Hub Operations (OSD)', c5: 'Narsingdi-Raipura', c6: 'Laptop-604' } },
+        { id: 't2', cells: { c1: 'CL-84750', c2: 'Md. Rabiul Hasan Sunny', c3: 'Associate', c4: 'OSD / Hub Operations (OSD)', c5: 'Cumilla-Brahmanpara', c6: 'Laptop-711' } },
+      ],
+    },
+  ],
+  signatures: defaultSignatures,
+  hasPto: true,
+};
+
+export const preset4BlankForm: CarryBeeFormData = {
+  id: 'preset-4',
+  presetName: 'Sample 4 - Official Blank Form (Image 4)',
+  company: {
+    ...defaultCompany,
+    date: new Date().toLocaleDateString('en-GB'),
+  },
+  parties: {
+    ...defaultParties,
+    fromMobile: '01831471127',
+  },
+  showStandardTable: true,
+  standardTableTitle: 'Hub/Attention Person/Mail/Remarks',
+  standardColumns: [
+    { id: 'sl', label: 'SL', key: 'sl', width: '48px', align: 'center' },
+    { id: 'assetName', label: 'Asset Name', key: 'assetName', width: '130px', align: 'left' },
+    { id: 'qty', label: 'QNT', key: 'qty', width: '48px', align: 'center' },
+    { id: 'tagNo', label: 'Tag No', key: 'tagNo', width: '90px', align: 'center' },
+    { id: 'remarks', label: 'Hub/Attention Person/Mail/Remarks', key: 'remarks', align: 'left' },
+  ],
+  standardItems: Array.from({ length: 15 }, (_, i) => ({
+    id: `blank-row-${i + 1}`,
+    sl: '',
+    assetName: '',
+    qty: '',
+    tagNo: '',
+    remarks: '',
+  })),
+  customSections: [],
+  signatures: defaultSignatures,
+  hasPto: false,
+};
+
+export const ALL_PRESETS: CarryBeeFormData[] = [
+  preset1StandardITAssets,
+  preset2MultiDeviceBags,
+  preset3MultiDeptLaptops,
+  preset4BlankForm,
+];

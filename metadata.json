@@ -1,0 +1,6 @@
+{
+  "name": "CarryBee Express - IT Asset Send / Received Form Generator",
+  "description": "Dynamic IT Asset Send / Received Form generator and management system for CarryBee Express Ltd. with customizable tables, presets, print and PDF export.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
