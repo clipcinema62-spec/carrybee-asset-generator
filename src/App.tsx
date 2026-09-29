@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { CarryBeeFormData } from './types/form';
-import { ALL_PRESETS, preset1StandardITAssets } from './data/presets';
+import { ALL_PRESETS } from './data/presets';
+import { createBlankCarryBeeForm } from './data/blankForm';
+import { getCurrentDateFormatted } from './utils/dateUtils';
 import { Toolbar } from './components/Toolbar';
 import { OfficialDocumentView } from './components/OfficialDocumentView';
 import { StandardTableEditor } from './components/StandardTableEditor';
@@ -18,7 +20,7 @@ import {
   Printer,
 } from 'lucide-react';
 
-const STORAGE_KEY = 'carrybee_it_asset_form_state_v1';
+const STORAGE_KEY = 'carrybee_it_asset_form_state_v2';
 
 export default function App() {
   const [formData, setFormData] = useState<CarryBeeFormData>(() => {
@@ -27,13 +29,17 @@ export default function App() {
       if (saved) {
         const parsed = JSON.parse(saved);
         if (parsed && parsed.company && parsed.parties) {
+          // If date was not updated or empty, always ensure current date
+          if (!parsed.company.date) {
+            parsed.company.date = getCurrentDateFormatted();
+          }
           return parsed;
         }
       }
     } catch (e) {
       console.error('Failed to load stored form data', e);
     }
-    return preset1StandardITAssets;
+    return createBlankCarryBeeForm();
   });
 
   const [activeTab, setActiveTab] = useState<'standard' | 'custom' | 'header'>('standard');
@@ -62,9 +68,9 @@ export default function App() {
   };
 
   const handleReset = () => {
-    if (confirm('Reset form back to default sample template? Any unsaved edits will be cleared.')) {
-      setFormData(JSON.parse(JSON.stringify(preset1StandardITAssets)));
-      showToast('Reset to default');
+    if (confirm('Reset form back to a clean blank form with today\'s date? Any unsaved edits will be cleared.')) {
+      setFormData(createBlankCarryBeeForm());
+      showToast('Reset to blank official form');
     }
   };
 

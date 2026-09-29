@@ -1,5 +1,6 @@
 import React from 'react';
 import { CarryBeeFormData, CustomSection, StandardAssetItem } from '../types/form';
+import { FormattedRemarks } from '../utils/formatRemarks';
 
 interface OfficialDocumentViewProps {
   data: CarryBeeFormData;
@@ -230,21 +231,32 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                             col.key === 'sl' ? 'font-medium' : ''
                           }`}
                         >
-                          <div
-                            contentEditable
-                            suppressContentEditableWarning
-                            onBlur={(e) =>
-                              handleStandardItemChange(
-                                rowIdx,
-                                col.key as keyof StandardAssetItem,
-                                e.currentTarget.innerText
-                              )
-                            }
-                            className="outline-none min-h-[16px] whitespace-pre-wrap hover:bg-amber-50 focus:bg-amber-100/70 px-0.5 rounded cursor-text"
-                            title="Click to edit cell directly"
-                          >
-                            {value}
-                          </div>
+                          {isRemarks && value && !interactive ? (
+                            <div 
+                              onClick={() => {
+                                // clicking opens direct editor if needed
+                              }}
+                              className="min-h-[16px]"
+                            >
+                              <FormattedRemarks text={String(value)} />
+                            </div>
+                          ) : (
+                            <div
+                              contentEditable
+                              suppressContentEditableWarning
+                              onBlur={(e) =>
+                                handleStandardItemChange(
+                                  rowIdx,
+                                  col.key as keyof StandardAssetItem,
+                                  e.currentTarget.innerText
+                                )
+                              }
+                              className="outline-none min-h-[16px] whitespace-pre-wrap hover:bg-amber-50 focus:bg-amber-100/70 px-0.5 rounded cursor-text"
+                              title="Click to edit cell directly"
+                            >
+                              {value}
+                            </div>
+                          )}
                         </td>
                       );
                     })}

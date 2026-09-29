@@ -202,6 +202,29 @@ export const StandardTableEditor: React.FC<StandardTableEditorProps> = ({ data, 
 
           <button
             type="button"
+            onClick={() => {
+              if (confirm('Clear all rows to have a clean, blank table?')) {
+                const cloned = JSON.parse(JSON.stringify(data)) as CarryBeeFormData;
+                cloned.standardItems = Array.from({ length: 10 }, (_, i) => ({
+                  id: `blank-row-${Date.now()}-${i}`,
+                  sl: i + 1,
+                  assetName: '',
+                  qty: 1,
+                  tagNo: '',
+                  remarks: '',
+                }));
+                onChange(cloned);
+              }
+            }}
+            className="flex items-center gap-1 text-xs bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-2.5 py-1.5 rounded shadow-sm font-medium"
+            title="Clear all rows and make table completely blank"
+          >
+            <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+            Clear / Blank
+          </button>
+
+          <button
+            type="button"
             onClick={handleAddRow}
             className="flex items-center gap-1 text-xs bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded shadow-sm font-semibold"
           >

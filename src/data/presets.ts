@@ -1,9 +1,10 @@
 import { CarryBeeFormData, StandardColumn } from '../types/form';
+import { getCurrentDateFormatted } from '../utils/dateUtils';
 
 export const defaultStandardColumns: StandardColumn[] = [
-  { id: 'sl', label: 'SL', key: 'sl', width: '48px', align: 'center' },
+  { id: 'sl', label: 'SL', key: 'sl', width: '45px', align: 'center' },
   { id: 'assetName', label: 'Asset Name', key: 'assetName', width: '135px', align: 'left' },
-  { id: 'qty', label: 'Qty', key: 'qty', width: '48px', align: 'center' },
+  { id: 'qty', label: 'Qty', key: 'qty', width: '45px', align: 'center' },
   { id: 'tagNo', label: 'Tag No', key: 'tagNo', width: '90px', align: 'center' },
   { id: 'remarks', label: 'Remarks', key: 'remarks', align: 'left' },
 ];
@@ -14,7 +15,7 @@ export const defaultCompany = {
   hotline: 'IT Hotline: 01701208286',
   formTitle: 'IT Asset Send / Received Form',
   department: 'IT & Infrastructure Department',
-  date: '27/09/2026',
+  date: getCurrentDateFormatted(),
 };
 
 export const defaultParties = {
@@ -419,8 +420,8 @@ export const preset4BlankForm: CarryBeeFormData = {
 };
 
 export const ALL_PRESETS: CarryBeeFormData[] = [
+  preset4BlankForm,
   preset1StandardITAssets,
   preset2MultiDeviceBags,
   preset3MultiDeptLaptops,
-  preset4BlankForm,
 ];
