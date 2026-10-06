@@ -1,11 +1,13 @@
 import React from 'react';
 
 /**
- * Parses remarks text and bolds keywords like:
- * - "Remarks:"
- * - "Mail:"
- * - Location / Hub names (e.g., Mohakhali, Kalabagan, etc. or lines ending with (Hub Incharge))
- * - Custom prefixes like "Attention:", "Ref:"
+ * Parses markdown **bold** syntax and predefined patterns like:
+ * - **bold text**
+ * - "Remarks:" or "Remarks -"
+ * - "Mail:" or "Mail -"
+ * - Hub / Location names e.g. "Mohakhali (Hub Incharge)"
+ * - "Attention:" or "Ref:"
+ * Returns HTML string compatible with Microsoft Word export and standard DOM.
  */
 export function formatRemarksHtml(text: string): string {
   if (!text) return '';
@@ -14,6 +16,9 @@ export function formatRemarksHtml(text: string): string {
   const formattedLines = lines.map((line) => {
     let trimmed = line.trim();
     if (!trimmed) return '';
+
+    // Convert Markdown **bold** to <b>bold</b>
+    trimmed = trimmed.replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
 
     // If line has "Remarks:" or "Remarks -"
     trimmed = trimmed.replace(/^(Remarks\s*[:\-–])\s*(.*)$/i, '<b>$1</b> $2');
@@ -25,8 +30,7 @@ export function formatRemarksHtml(text: string): string {
     trimmed = trimmed.replace(/^(Attention\s*[:\-–]|Ref\s*[:\-–])\s*(.*)$/i, '<b>$1</b> $2');
 
     // If line has "(Hub Incharge)" or "(Hub In-charge)"
-    if (/\(Hub\s*In-?charge\)/i.test(trimmed)) {
-      // Bold the hub name and hub incharge or the whole hub prefix
+    if (/\(Hub\s*In-?charge\)/i.test(trimmed) && !trimmed.includes('<b>')) {
       trimmed = trimmed.replace(/^([^\(]+)(\(Hub\s*In-?charge\))(.*)$/i, '<b>$1$2</b>$3');
     }
 
@@ -37,7 +41,33 @@ export function formatRemarksHtml(text: string): string {
 }
 
 /**
- * React Component to render parsed remarks with bold keywords
+ * Helper to render inline string with **bold** markers
+ */
+function renderInlineWithBold(text: string): React.ReactNode {
+  if (!text.includes('**')) {
+    return text;
+  }
+
+  const parts = text.split(/(\*\*.*?\*\*)/g);
+  return (
+    <>
+      {parts.map((part, index) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          const content = part.slice(2, -2);
+          return (
+            <strong key={index} className="font-bold text-black">
+              {content}
+            </strong>
+          );
+        }
+        return part;
+      })}
+    </>
+  );
+}
+
+/**
+ * React Component to render parsed remarks with bold keywords and manual **bold** markup
  */
 export const FormattedRemarks: React.FC<{ text: string }> = ({ text }) => {
   if (!text) return null;
@@ -49,6 +79,15 @@ export const FormattedRemarks: React.FC<{ text: string }> = ({ text }) => {
       {lines.map((line, idx) => {
         const trimmed = line.trim();
         if (!trimmed) return <div key={idx} className="h-2" />;
+
+        // Explicit markdown bold in the line
+        if (trimmed.includes('**')) {
+          return (
+            <div key={idx} className="text-slate-800">
+              {renderInlineWithBold(trimmed)}
+            </div>
+          );
+        }
 
         // Match "Remarks:" or "Remarks -"
         const remarksMatch = trimmed.match(/^(Remarks\s*[:\-–])\s*(.*)$/i);

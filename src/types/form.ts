@@ -64,6 +64,15 @@ export interface Signatures {
   receivedByName?: string;
 }
 
+export interface DocumentPage {
+  id: string;
+  pageNumber: number;
+  showStandardTable: boolean;
+  standardItems: StandardAssetItem[];
+  customSections: CustomSection[];
+  note?: string;
+}
+
 export interface CarryBeeFormData {
   id: string;
   presetName: string;
@@ -74,6 +83,7 @@ export interface CarryBeeFormData {
   standardColumns: StandardColumn[];
   standardItems: StandardAssetItem[];
   customSections: CustomSection[];
+  pages?: DocumentPage[];
   signatures: Signatures;
   hasPto: boolean;
 }

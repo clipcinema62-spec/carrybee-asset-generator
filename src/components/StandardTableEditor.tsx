@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { CarryBeeFormData, StandardAssetItem, StandardColumn } from '../types/form';
-import { Plus, Trash2, ArrowUp, ArrowDown, Copy, Hash, Columns, Sparkles } from 'lucide-react';
+import { Plus, Trash2, ArrowUp, ArrowDown, Copy, Hash, Columns, Sparkles, Bold, Type } from 'lucide-react';
 
 interface StandardTableEditorProps {
   data: CarryBeeFormData;
@@ -440,12 +440,56 @@ export const StandardTableEditor: React.FC<StandardTableEditorProps> = ({ data, 
             {/* Remarks with formatting helpers */}
             <div>
               <div className="flex items-center justify-between mb-0.5">
-                <label className="text-[10px] font-semibold text-slate-500">
-                  Remarks / Hub / Attention Person / Mail Info
-                </label>
+                <div className="flex items-center gap-2">
+                  <label className="text-[10px] font-semibold text-slate-500">
+                    Remarks / Hub / Attention Person / Mail Info
+                  </label>
+                  {/* Bold & Normal Format Buttons */}
+                  <div className="flex items-center gap-1 bg-slate-100 p-0.5 rounded border border-slate-200">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const textarea = document.getElementById(`remarks-textarea-${idx}`) as HTMLTextAreaElement | null;
+                        if (!textarea) return;
+                        const start = textarea.selectionStart;
+                        const end = textarea.selectionEnd;
+                        const current = item.remarks || '';
+                        if (start !== end) {
+                          const selected = current.substring(start, end);
+                          const updated = current.substring(0, start) + `**${selected}**` + current.substring(end);
+                          updateItem(idx, 'remarks', updated);
+                        } else {
+                          // If no selection, toggle entire field or insert template bold
+                          const updated = current ? `**${current}**` : '**Bold Text**';
+                          updateItem(idx, 'remarks', updated);
+                        }
+                      }}
+                      className="flex items-center gap-0.5 text-[9.5px] px-1.5 py-0.5 rounded bg-white hover:bg-slate-200 text-slate-800 font-bold border border-slate-200 shadow-2xs"
+                      title="Make selected text Bold (**word**)"
+                    >
+                      <Bold className="w-3 h-3 text-black" />
+                      <span>Bold</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const current = item.remarks || '';
+                        // Remove ** markdown formatting to make normal
+                        const cleaned = current.replace(/\*\*/g, '');
+                        updateItem(idx, 'remarks', cleaned);
+                      }}
+                      className="flex items-center gap-0.5 text-[9.5px] px-1.5 py-0.5 rounded bg-white hover:bg-slate-200 text-slate-600 font-normal border border-slate-200 shadow-2xs"
+                      title="Remove bold formatting and make Normal text"
+                    >
+                      <Type className="w-3 h-3 text-slate-500" />
+                      <span>Normal</span>
+                    </button>
+                  </div>
+                </div>
+
                 {/* Hub quick insert chips */}
-                <div className="flex items-center gap-1 overflow-x-auto max-w-[280px]">
-                  <span className="text-[10px] text-slate-400">Quick Hub:</span>
+                <div className="flex items-center gap-1 overflow-x-auto max-w-[240px]">
+                  <span className="text-[10px] text-slate-400">Hub:</span>
                   {COMMON_HUBS.slice(0, 4).map((hub) => (
                     <button
                       key={hub}
@@ -459,6 +503,7 @@ export const StandardTableEditor: React.FC<StandardTableEditorProps> = ({ data, 
                 </div>
               </div>
               <textarea
+                id={`remarks-textarea-${idx}`}
                 value={item.remarks}
                 onChange={(e) => updateItem(idx, 'remarks', e.target.value)}
                 rows={3}
