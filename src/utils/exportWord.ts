@@ -1,5 +1,6 @@
 import { CarryBeeFormData } from '../types/form';
 import { formatRemarksHtml } from './formatRemarks';
+import { getDocumentFileName } from './dateUtils';
 
 /**
  * Generates an editable Microsoft Word document (.doc format with Word XML/HTML schema)
@@ -7,7 +8,7 @@ import { formatRemarksHtml } from './formatRemarks';
  * Designed with compact box spacing to perfectly adjust content inside tables.
  */
 export const downloadWordDocument = (data: CarryBeeFormData) => {
-  const fileName = `CarryBee_Asset_Form_${(data.company.date || 'doc').replace(/\//g, '-')}.doc`;
+  const fileName = getDocumentFileName(data.company.date, 'doc');
 
   // Standard Asset Rows
   const standardRowsHtml = data.showStandardTable && data.standardItems.length > 0

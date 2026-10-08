@@ -2,6 +2,7 @@ import React, { useRef } from 'react';
 import { CarryBeeFormData } from '../types/form';
 import { ALL_PRESETS } from '../data/presets';
 import { downloadWordDocument } from '../utils/exportWord';
+import { getDocumentFileName } from '../utils/dateUtils';
 import {
   Printer,
   Download,
@@ -63,7 +64,14 @@ export const Toolbar: React.FC<ToolbarProps> = ({
   const [copiedCsv, setCopiedCsv] = React.useState(false);
 
   const handlePrint = () => {
+    const originalTitle = document.title;
+    const targetTitle = getDocumentFileName(currentData.company.date);
+    document.title = targetTitle;
     window.print();
+    // Restore title after print dialog closes
+    setTimeout(() => {
+      document.title = originalTitle;
+    }, 1000);
   };
 
   const handleExportJson = () => {
@@ -72,7 +80,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `CarryBee_Asset_Form_${(currentData.company.date || 'form').replace(/\//g, '-')}.json`;
+    a.download = getDocumentFileName(currentData.company.date, 'json');
     a.click();
     URL.revokeObjectURL(url);
   };

@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { CarryBeeFormData, DocumentPage } from './types/form';
 import { ALL_PRESETS } from './data/presets';
 import { createBlankCarryBeeForm } from './data/blankForm';
-import { getCurrentDateFormatted, ddmmyyyyToIso, isoToDdmmyyyy } from './utils/dateUtils';
+import { getCurrentDateFormatted, ddmmyyyyToIso, isoToDdmmyyyy, getDocumentFileName } from './utils/dateUtils';
 import { Toolbar } from './components/Toolbar';
 import { OfficialDocumentView } from './components/OfficialDocumentView';
 import { StandardTableEditor } from './components/StandardTableEditor';
@@ -466,7 +466,14 @@ export default function App() {
 
                   <button
                     type="button"
-                    onClick={() => window.print()}
+                    onClick={() => {
+                      const originalTitle = document.title;
+                      document.title = getDocumentFileName(formData.company.date);
+                      window.print();
+                      setTimeout(() => {
+                        document.title = originalTitle;
+                      }, 1000);
+                    }}
                     className="text-xs bg-amber-400 hover:bg-amber-500 text-black px-3 py-1.2 rounded font-bold flex items-center gap-1.5 shadow-xs active:scale-95 transition-all"
                     title="Print directly or save as PDF"
                   >
