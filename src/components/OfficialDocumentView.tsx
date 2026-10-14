@@ -77,7 +77,6 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
   const currentDateDisplay = data.company.date || getCurrentDateFormatted();
 
   // Automatic intelligent page partitioning:
-  // If manual pages array exists with >1 page, respect it; otherwise automatically partition rows so they spill over gracefully!
   const autoPartitions = partitionItemsIntoPages(data.standardItems);
   const totalPagesCount = autoPartitions.length;
 
@@ -91,76 +90,60 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
         return (
           <div
             key={`page-${pageIdx + 1}`}
-            className={`document-container w-full bg-white text-black mx-auto p-5 sm:p-7 md:p-9 shadow-lg border border-slate-200 print:border-none print:shadow-none print:p-0 font-sans leading-tight min-h-[1050px] flex flex-col justify-between selection:bg-amber-100 relative ${
+            className={`document-container w-full bg-white text-black mx-auto p-5 sm:p-7 md:p-8 shadow-lg border border-slate-200 print:border-none print:shadow-none print:p-0 font-sans leading-tight min-h-[1050px] flex flex-col justify-between selection:bg-amber-100 relative ${
               !isLastPage ? 'print-page-break mb-8 print:mb-0' : ''
             }`}
           >
             {/* Top Content Zone */}
             <div className="flex-1">
-              {/* Official Full Header on Page 1, or Clean Full Official Header on Subsequent Pages */}
-              {isFirstPage ? (
-                <div className="text-center mb-2">
-                  <h1 
-                    contentEditable={interactive}
-                    suppressContentEditableWarning
-                    onBlur={(e) => handleTextChange('company.name', e.currentTarget.textContent || '')}
-                    className="text-[24px] md:text-[27px] font-bold tracking-tight text-black outline-none focus:bg-amber-50"
-                  >
-                    {data.company.name}
-                  </h1>
-                  <p 
-                    contentEditable={interactive}
-                    suppressContentEditableWarning
-                    onBlur={(e) => handleTextChange('company.address', e.currentTarget.textContent || '')}
-                    className="text-[12px] text-gray-800 outline-none focus:bg-amber-50"
-                  >
-                    {data.company.address}
-                  </p>
-                  <p 
-                    contentEditable={interactive}
-                    suppressContentEditableWarning
-                    onBlur={(e) => handleTextChange('company.hotline', e.currentTarget.textContent || '')}
-                    className="text-[12px] italic text-gray-800 outline-none focus:bg-amber-50"
-                  >
-                    {data.company.hotline}
-                  </p>
+              {/* CarryBee Official Full Header (Identical on every page as requested) */}
+              <div className="text-center mb-2">
+                <h1 
+                  contentEditable={interactive}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange('company.name', e.currentTarget.textContent || '')}
+                  className="text-[24px] md:text-[27px] font-bold tracking-tight text-black outline-none focus:bg-amber-50"
+                >
+                  {data.company.name}
+                </h1>
+                <p 
+                  contentEditable={interactive}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange('company.address', e.currentTarget.textContent || '')}
+                  className="text-[12px] text-gray-800 outline-none focus:bg-amber-50"
+                >
+                  {data.company.address}
+                </p>
+                <p 
+                  contentEditable={interactive}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange('company.hotline', e.currentTarget.textContent || '')}
+                  className="text-[12px] italic text-gray-800 outline-none focus:bg-amber-50"
+                >
+                  {data.company.hotline}
+                </p>
 
-                  {/* Black Form Badge */}
-                  <div className="inline-block mt-1">
-                    <span 
-                      contentEditable={interactive}
-                      suppressContentEditableWarning
-                      onBlur={(e) => handleTextChange('company.formTitle', e.currentTarget.textContent || '')}
-                      className="bg-black text-white px-4 py-0.5 text-[14px] md:text-[15px] font-bold tracking-wide uppercase inline-block outline-none"
-                    >
-                      {data.company.formTitle}
-                    </span>
-                  </div>
-
-                  <p 
+                {/* Black Form Badge */}
+                <div className="inline-block mt-1">
+                  <span 
                     contentEditable={interactive}
                     suppressContentEditableWarning
-                    onBlur={(e) => handleTextChange('company.department', e.currentTarget.textContent || '')}
-                    className="text-[12.5px] font-normal text-gray-900 mt-0.5 outline-none focus:bg-amber-50"
+                    onBlur={(e) => handleTextChange('company.formTitle', e.currentTarget.textContent || '')}
+                    className="bg-black text-white px-4 py-0.5 text-[14px] md:text-[15px] font-bold tracking-wide uppercase inline-block outline-none"
                   >
-                    {data.company.department}
-                  </p>
+                    {data.company.formTitle}
+                  </span>
                 </div>
-              ) : (
-                <div className="text-center mb-2">
-                  <h2 className="text-[20px] font-bold tracking-tight text-black">
-                    {data.company.name}
-                  </h2>
-                  <p className="text-[11.5px] text-gray-800">
-                    {data.company.address} | {data.company.hotline}
-                  </p>
-                  <div className="inline-block mt-1">
-                    <span className="bg-black text-white px-3 py-0.5 text-[12px] font-bold tracking-wide uppercase inline-block">
-                      {data.company.formTitle} (Continued)
-                    </span>
-                  </div>
-                </div>
-              )}
+
+                <p 
+                  contentEditable={interactive}
+                  suppressContentEditableWarning
+                  onBlur={(e) => handleTextChange('company.department', e.currentTarget.textContent || '')}
+                  className="text-[12.5px] font-normal text-gray-900 mt-0.5 outline-none focus:bg-amber-50"
+                >
+                  {data.company.department}
+                </p>
+              </div>
 
               {/* Date Row (Interactive with Calendar icon & direct date picker) */}
               <div className="flex justify-end items-center mb-1 text-[12.5px]">
@@ -193,87 +176,80 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                 </div>
               </div>
 
-              {/* From / To Dotted Box (Always on Page 1, or compact reference on subsequent pages) */}
-              {isFirstPage ? (
-                <div className="border border-dashed border-gray-600 grid grid-cols-2 text-[11.5px] md:text-[12px] mb-2.5">
-                  {/* From Column */}
-                  <div className="p-1.5 border-r border-dashed border-gray-600 leading-snug">
-                    <div className="font-bold text-[12.5px]">From,</div>
-                    <div 
+              {/* From / To Dotted Box (Rendered on every page for consistent official identification) */}
+              <div className="border border-dashed border-gray-600 grid grid-cols-2 text-[11.5px] md:text-[12px] mb-2.5">
+                {/* From Column */}
+                <div className="p-1.5 border-r border-dashed border-gray-600 leading-snug">
+                  <div className="font-bold text-[12.5px]">From,</div>
+                  <div 
+                    contentEditable={interactive}
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleTextChange('parties.fromBranch', e.currentTarget.textContent || '')}
+                    className="font-bold outline-none focus:bg-amber-50"
+                  >
+                    {data.parties.fromBranch}
+                  </div>
+                  <div className="flex">
+                    <span className="shrink-0 mr-1 font-semibold">Name:</span>
+                    <span 
                       contentEditable={interactive}
                       suppressContentEditableWarning
-                      onBlur={(e) => handleTextChange('parties.fromBranch', e.currentTarget.textContent || '')}
-                      className="font-bold outline-none focus:bg-amber-50"
+                      onBlur={(e) => handleTextChange('parties.fromName', e.currentTarget.textContent || '')}
+                      className="outline-none focus:bg-amber-50 grow"
                     >
-                      {data.parties.fromBranch}
-                    </div>
-                    <div className="flex">
-                      <span className="shrink-0 mr-1 font-semibold">Name:</span>
-                      <span 
-                        contentEditable={interactive}
-                        suppressContentEditableWarning
-                        onBlur={(e) => handleTextChange('parties.fromName', e.currentTarget.textContent || '')}
-                        className="outline-none focus:bg-amber-50 grow"
-                      >
-                        {data.parties.fromName}
-                      </span>
-                    </div>
-                    <div className="flex">
-                      <span className="shrink-0 mr-1 font-semibold">Mobile No:</span>
-                      <span 
-                        contentEditable={interactive}
-                        suppressContentEditableWarning
-                        onBlur={(e) => handleTextChange('parties.fromMobile', e.currentTarget.textContent || '')}
-                        className="outline-none focus:bg-amber-50 grow"
-                      >
-                        {data.parties.fromMobile}
-                      </span>
-                    </div>
+                      {data.parties.fromName}
+                    </span>
                   </div>
-
-                  {/* To Column */}
-                  <div className="p-1.5 leading-snug">
-                    <div className="font-bold text-[12.5px]">To,</div>
-                    <div 
+                  <div className="flex">
+                    <span className="shrink-0 mr-1 font-semibold">Mobile No:</span>
+                    <span 
                       contentEditable={interactive}
                       suppressContentEditableWarning
-                      onBlur={(e) => handleTextChange('parties.toBranch', e.currentTarget.textContent || '')}
-                      className="font-bold outline-none focus:bg-amber-50"
+                      onBlur={(e) => handleTextChange('parties.fromMobile', e.currentTarget.textContent || '')}
+                      className="outline-none focus:bg-amber-50 grow"
                     >
-                      {data.parties.toBranch}
-                    </div>
-                    <div className="flex">
-                      <span className="shrink-0 mr-1 font-semibold">Name:</span>
-                      <span 
-                        contentEditable={interactive}
-                        suppressContentEditableWarning
-                        onBlur={(e) => handleTextChange('parties.toName', e.currentTarget.textContent || '')}
-                        className="outline-none focus:bg-amber-50 grow"
-                      >
-                        {data.parties.toName}
-                      </span>
-                    </div>
-                    <div className="flex">
-                      <span className="shrink-0 mr-1 font-semibold">Mobile No:</span>
-                      <span 
-                        contentEditable={interactive}
-                        suppressContentEditableWarning
-                        onBlur={(e) => handleTextChange('parties.toMobile', e.currentTarget.textContent || '')}
-                        className="outline-none focus:bg-amber-50 grow"
-                      >
-                        {data.parties.toMobile}
-                      </span>
-                    </div>
+                      {data.parties.fromMobile}
+                    </span>
                   </div>
                 </div>
-              ) : (
-                <div className="border border-dashed border-gray-400 p-1.5 flex justify-between text-[11px] mb-2 bg-slate-50/50">
-                  <div><b>From:</b> {data.parties.fromBranch} ({data.parties.fromName || 'Prepared By'})</div>
-                  <div><b>To:</b> {data.parties.toBranch} ({data.parties.toName || 'Sort / TNL In charge'})</div>
-                </div>
-              )}
 
-              {/* Standard Assets Table for this specific page partition */}
+                {/* To Column */}
+                <div className="p-1.5 leading-snug">
+                  <div className="font-bold text-[12.5px]">To,</div>
+                  <div 
+                    contentEditable={interactive}
+                    suppressContentEditableWarning
+                    onBlur={(e) => handleTextChange('parties.toBranch', e.currentTarget.textContent || '')}
+                    className="font-bold outline-none focus:bg-amber-50"
+                  >
+                    {data.parties.toBranch}
+                  </div>
+                  <div className="flex">
+                    <span className="shrink-0 mr-1 font-semibold">Name:</span>
+                    <span 
+                      contentEditable={interactive}
+                      suppressContentEditableWarning
+                      onBlur={(e) => handleTextChange('parties.toName', e.currentTarget.textContent || '')}
+                      className="outline-none focus:bg-amber-50 grow"
+                    >
+                      {data.parties.toName}
+                    </span>
+                  </div>
+                  <div className="flex">
+                    <span className="shrink-0 mr-1 font-semibold">Mobile No:</span>
+                    <span 
+                      contentEditable={interactive}
+                      suppressContentEditableWarning
+                      onBlur={(e) => handleTextChange('parties.toMobile', e.currentTarget.textContent || '')}
+                      className="outline-none focus:bg-amber-50 grow"
+                    >
+                      {data.parties.toMobile}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Standard Assets Table Header and Rows for this page partition */}
               {data.showStandardTable && pageItems.length > 0 && (
                 <div className="mb-3">
                   <table className="w-full border-collapse border border-black text-[11px] md:text-[11.5px]">

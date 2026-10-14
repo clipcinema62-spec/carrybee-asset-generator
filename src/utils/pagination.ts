@@ -16,18 +16,24 @@ function getItemWeight(item: StandardAssetItem): number {
   if (!item.remarks) return 1;
   const lineCount = item.remarks.split('\n').filter(Boolean).length;
   if (lineCount <= 1) return 1;
-  if (lineCount === 2) return 1.3;
-  if (lineCount === 3) return 1.6;
-  return 1.6 + (lineCount - 3) * 0.4;
+  if (lineCount === 2) return 1.25;
+  if (lineCount === 3) return 1.5;
+  return 1.5 + (lineCount - 3) * 0.3;
 }
 
 /**
  * Automatically segments standard items into pages so that:
- * 1. Page 1 accommodates: Header, Company info, Badge, Date, From/To box, Table rows, Signatures (if 1 page) or P.T.O.
- *    -> Capacity weight for Page 1 is approx 7.5 items (with multi-line remarks) or ~8 items max.
- * 2. Subsequent pages have no From/To box and standard header, so they can hold approx 12-14 items.
- * 3. If a page gets full, items automatically spill over to Page 2, Page 3, etc.
- * 4. Signatures ALWAYS stay at the bottom of the last page.
+ * 1. Page 1:
+ *    - Full Letterhead (CarryBee Express Ltd., Address, Hotline, Form Badge, Department)
+ *    - Date row
+ *    - From/To box
+ *    - Fits 8-9 items comfortably on A4 without causing premature page break
+ * 2. Subsequent pages (Page 2, Page 3, etc.):
+ *    - Identical official Letterhead (CarryBee Express Ltd., Address, Hotline, Form Badge, Department)
+ *    - Date row
+ *    - Compact From/To box
+ *    - Table header & rows
+ *    - Signatures at the bottom of the final page
  */
 export function partitionItemsIntoPages(items: StandardAssetItem[]): PagePartition[] {
   if (!items || items.length === 0) {
@@ -41,8 +47,11 @@ export function partitionItemsIntoPages(items: StandardAssetItem[]): PagePartiti
     ];
   }
 
-  const PAGE_1_CAPACITY_WEIGHT = 7.5; // fits Page 1 perfectly with Letterhead, From/To box & Signatures
-  const SUBSEQUENT_PAGE_CAPACITY_WEIGHT = 12.0;
+  // Realistic A4 capacity limits:
+  // Page 1: Holds ~8-9 items comfortably before needing Page 2
+  const PAGE_1_CAPACITY_WEIGHT = 11.5;
+  // Subsequent pages: Holds ~11-13 items
+  const SUBSEQUENT_PAGE_CAPACITY_WEIGHT = 13.5;
 
   const partitions: PagePartition[] = [];
   let currentPageItems: StandardAssetItem[] = [];
