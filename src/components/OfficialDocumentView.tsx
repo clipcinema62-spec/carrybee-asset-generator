@@ -2,6 +2,7 @@ import React from 'react';
 import { CarryBeeFormData, CustomSection, StandardAssetItem } from '../types/form';
 import { FormattedRemarks } from '../utils/formatRemarks';
 import { ddmmyyyyToIso, isoToDdmmyyyy, getCurrentDateFormatted } from '../utils/dateUtils';
+import { partitionItemsIntoPages } from '../utils/pagination';
 import { Calendar } from 'lucide-react';
 
 interface OfficialDocumentViewProps {
@@ -47,11 +48,11 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
     onUpdate(cloned);
   };
 
-  const handleStandardItemChange = (index: number, field: keyof StandardAssetItem, value: string) => {
+  const handleStandardItemChange = (globalIndex: number, field: keyof StandardAssetItem, value: string) => {
     if (!onUpdate) return;
     const cloned = JSON.parse(JSON.stringify(data)) as CarryBeeFormData;
-    if (cloned.standardItems[index]) {
-      cloned.standardItems[index][field] = value as any;
+    if (cloned.standardItems[globalIndex]) {
+      cloned.standardItems[globalIndex][field] = value as any;
       onUpdate(cloned);
     }
   };
@@ -75,35 +76,28 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
 
   const currentDateDisplay = data.company.date || getCurrentDateFormatted();
 
-  // If multi-page array exists and has pages, render each page
-  const pages = (data.pages && data.pages.length > 0)
-    ? data.pages
-    : [
-        {
-          id: 'page-1',
-          pageNumber: 1,
-          showStandardTable: data.showStandardTable,
-          standardItems: data.standardItems,
-          customSections: data.customSections,
-        },
-      ];
+  // Automatic intelligent page partitioning:
+  // If manual pages array exists with >1 page, respect it; otherwise automatically partition rows so they spill over gracefully!
+  const autoPartitions = partitionItemsIntoPages(data.standardItems);
+  const totalPagesCount = autoPartitions.length;
 
   return (
     <div className="space-y-8 print:space-y-0">
-      {pages.map((page, pageIdx) => {
-        const isFirstPage = pageIdx === 0;
-        const isLastPage = pageIdx === pages.length - 1;
+      {autoPartitions.map((partition, pageIdx) => {
+        const isFirstPage = partition.isFirstPage;
+        const isLastPage = partition.isLastPage;
+        const pageItems = partition.items;
 
         return (
           <div
-            key={page.id || pageIdx}
+            key={`page-${pageIdx + 1}`}
             className={`document-container w-full bg-white text-black mx-auto p-5 sm:p-7 md:p-9 shadow-lg border border-slate-200 print:border-none print:shadow-none print:p-0 font-sans leading-tight min-h-[1050px] flex flex-col justify-between selection:bg-amber-100 relative ${
-              !isLastPage ? 'print-page-break' : ''
+              !isLastPage ? 'print-page-break mb-8 print:mb-0' : ''
             }`}
           >
             {/* Top Content Zone */}
             <div className="flex-1">
-              {/* Document Header (Always on Page 1, or compact header on subsequent pages) */}
+              {/* Official Full Header on Page 1, or Clean Full Official Header on Subsequent Pages */}
               {isFirstPage ? (
                 <div className="text-center mb-2">
                   <h1 
@@ -153,9 +147,18 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                   </p>
                 </div>
               ) : (
-                <div className="flex items-center justify-between border-b border-black pb-1 mb-3 text-xs">
-                  <span className="font-bold">{data.company.name} - {data.company.formTitle}</span>
-                  <span className="font-semibold text-slate-600">Page {pageIdx + 1} of {pages.length}</span>
+                <div className="text-center mb-2">
+                  <h2 className="text-[20px] font-bold tracking-tight text-black">
+                    {data.company.name}
+                  </h2>
+                  <p className="text-[11.5px] text-gray-800">
+                    {data.company.address} | {data.company.hotline}
+                  </p>
+                  <div className="inline-block mt-1">
+                    <span className="bg-black text-white px-3 py-0.5 text-[12px] font-bold tracking-wide uppercase inline-block">
+                      {data.company.formTitle} (Continued)
+                    </span>
+                  </div>
                 </div>
               )}
 
@@ -190,8 +193,8 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                 </div>
               </div>
 
-              {/* From / To Dotted Box (Page 1) */}
-              {isFirstPage && (
+              {/* From / To Dotted Box (Always on Page 1, or compact reference on subsequent pages) */}
+              {isFirstPage ? (
                 <div className="border border-dashed border-gray-600 grid grid-cols-2 text-[11.5px] md:text-[12px] mb-2.5">
                   {/* From Column */}
                   <div className="p-1.5 border-r border-dashed border-gray-600 leading-snug">
@@ -263,10 +266,15 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                     </div>
                   </div>
                 </div>
+              ) : (
+                <div className="border border-dashed border-gray-400 p-1.5 flex justify-between text-[11px] mb-2 bg-slate-50/50">
+                  <div><b>From:</b> {data.parties.fromBranch} ({data.parties.fromName || 'Prepared By'})</div>
+                  <div><b>To:</b> {data.parties.toBranch} ({data.parties.toName || 'Sort / TNL In charge'})</div>
+                </div>
               )}
 
-              {/* Standard Assets Table */}
-              {page.showStandardTable && page.standardItems.length > 0 && (
+              {/* Standard Assets Table for this specific page partition */}
+              {data.showStandardTable && pageItems.length > 0 && (
                 <div className="mb-3">
                   <table className="w-full border-collapse border border-black text-[11px] md:text-[11.5px]">
                     <thead>
@@ -283,52 +291,59 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                       </tr>
                     </thead>
                     <tbody>
-                      {page.standardItems.map((item, rowIdx) => (
-                        <tr key={item.id || rowIdx} className="hover:bg-amber-50/20">
-                          {data.standardColumns.map((col) => {
-                            const value = (item as any)[col.key] || item.customValues?.[col.key] || '';
-                            const isRemarks = col.key === 'remarks';
+                      {pageItems.map((item) => {
+                        // Find global index in data.standardItems for onBlur updates
+                        const globalIdx = data.standardItems.findIndex((it) => it.id === item.id);
 
-                            return (
-                              <td
-                                key={col.id}
-                                className={`border border-black px-1.5 py-1 align-top text-${col.align || 'left'} ${
-                                  col.key === 'sl' ? 'font-medium' : ''
-                                }`}
-                              >
-                                {isRemarks && value && !interactive ? (
-                                  <div className="min-h-[16px]">
-                                    <FormattedRemarks text={String(value)} />
-                                  </div>
-                                ) : (
-                                  <div
-                                    contentEditable
-                                    suppressContentEditableWarning
-                                    onBlur={(e) =>
-                                      handleStandardItemChange(
-                                        rowIdx,
-                                        col.key as keyof StandardAssetItem,
-                                        e.currentTarget.innerText
-                                      )
-                                    }
-                                    className="outline-none min-h-[16px] whitespace-pre-wrap hover:bg-amber-50 focus:bg-amber-100/70 px-0.5 rounded cursor-text"
-                                    title="Click to edit cell directly"
-                                  >
-                                    {value}
-                                  </div>
-                                )}
-                              </td>
-                            );
-                          })}
-                        </tr>
-                      ))}
+                        return (
+                          <tr key={item.id} className="hover:bg-amber-50/20">
+                            {data.standardColumns.map((col) => {
+                              const value = (item as any)[col.key] || item.customValues?.[col.key] || '';
+                              const isRemarks = col.key === 'remarks';
+
+                              return (
+                                <td
+                                  key={col.id}
+                                  className={`border border-black px-1.5 py-1 align-top text-${col.align || 'left'} ${
+                                    col.key === 'sl' ? 'font-medium' : ''
+                                  }`}
+                                >
+                                  {isRemarks && value && !interactive ? (
+                                    <div className="min-h-[16px]">
+                                      <FormattedRemarks text={String(value)} />
+                                    </div>
+                                  ) : (
+                                    <div
+                                      contentEditable
+                                      suppressContentEditableWarning
+                                      onBlur={(e) => {
+                                        if (globalIdx !== -1) {
+                                          handleStandardItemChange(
+                                            globalIdx,
+                                            col.key as keyof StandardAssetItem,
+                                            e.currentTarget.innerText
+                                          );
+                                        }
+                                      }}
+                                      className="outline-none min-h-[16px] whitespace-pre-wrap hover:bg-amber-50 focus:bg-amber-100/70 px-0.5 rounded cursor-text"
+                                      title="Click to edit cell directly"
+                                    >
+                                      {value}
+                                    </div>
+                                  )}
+                                </td>
+                              );
+                            })}
+                          </tr>
+                        );
+                      })}
                     </tbody>
                   </table>
                 </div>
               )}
 
-              {/* Custom Sub-Tables */}
-              {page.customSections.map((section, secIdx) => (
+              {/* Custom Sub-Tables (Shown on last page or page 1 if only 1 page) */}
+              {isLastPage && data.customSections && data.customSections.map((section, secIdx) => (
                 <div key={section.id || secIdx} className="mb-3.5 print-avoid-break">
                   {section.mailSubject && (
                     <div
@@ -411,46 +426,52 @@ export const OfficialDocumentView: React.FC<OfficialDocumentViewProps> = ({
                 </div>
               ))}
 
-              {/* P.T.O indicator if not last page */}
-              {(!isLastPage || data.hasPto) && (
-                <div className="text-right text-[12px] font-bold text-gray-800 pr-2 my-2">
-                  P.T.O
+              {/* P.T.O indicator if not the last page */}
+              {!isLastPage && (
+                <div className="text-right text-[12px] font-bold text-gray-900 pr-2 my-2 tracking-wide">
+                  P.T.O &rarr;
                 </div>
               )}
             </div>
 
-            {/* Signatures Section: ALWAYS PINNED TO BOTTOM */}
-            <div className="mt-auto pt-6 pb-2 print-avoid-break">
-              <div className="grid grid-cols-3 text-center text-[12px] md:text-[12.5px]">
-                <div>
-                  <div className="w-36 md:w-44 border-b-2 border-black mx-auto mb-1"></div>
-                  <div className="font-bold text-black">{data.signatures.preparedByLabel}</div>
-                  {data.signatures.preparedByName && (
-                    <div className="text-[11px] text-gray-700 mt-0.5 font-medium">{data.signatures.preparedByName}</div>
-                  )}
+            {/* Signatures Section: ALWAYS PINNED TO THE BOTTOM OF THE LAST PAGE */}
+            {isLastPage ? (
+              <div className="mt-auto pt-6 pb-2 print-avoid-break">
+                <div className="grid grid-cols-3 text-center text-[12px] md:text-[12.5px]">
+                  <div>
+                    <div className="w-36 md:w-44 border-b-2 border-black mx-auto mb-1"></div>
+                    <div className="font-bold text-black">{data.signatures.preparedByLabel}</div>
+                    {data.signatures.preparedByName && (
+                      <div className="text-[11px] text-gray-700 mt-0.5 font-medium">{data.signatures.preparedByName}</div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="w-36 md:w-44 border-b-2 border-black mx-auto mb-1"></div>
+                    <div className="font-bold text-black">{data.signatures.authorizedByLabel}</div>
+                    {data.signatures.authorizedByName && (
+                      <div className="text-[11px] text-gray-700 mt-0.5 font-medium">{data.signatures.authorizedByName}</div>
+                    )}
+                  </div>
+                  <div>
+                    <div className="w-36 md:w-44 border-b-2 border-black mx-auto mb-1"></div>
+                    <div className="font-bold text-black">{data.signatures.receivedByLabel}</div>
+                    {data.signatures.receivedByName && (
+                      <div className="text-[11px] text-gray-700 mt-0.5 font-medium">{data.signatures.receivedByName}</div>
+                    )}
+                  </div>
                 </div>
-                <div>
-                  <div className="w-36 md:w-44 border-b-2 border-black mx-auto mb-1"></div>
-                  <div className="font-bold text-black">{data.signatures.authorizedByLabel}</div>
-                  {data.signatures.authorizedByName && (
-                    <div className="text-[11px] text-gray-700 mt-0.5 font-medium">{data.signatures.authorizedByName}</div>
-                  )}
-                </div>
-                <div>
-                  <div className="w-36 md:w-44 border-b-2 border-black mx-auto mb-1"></div>
-                  <div className="font-bold text-black">{data.signatures.receivedByLabel}</div>
-                  {data.signatures.receivedByName && (
-                    <div className="text-[11px] text-gray-700 mt-0.5 font-medium">{data.signatures.receivedByName}</div>
-                  )}
-                </div>
+
+                {totalPagesCount > 1 && (
+                  <div className="text-center text-[10.5px] text-gray-600 mt-3 font-semibold">
+                    Page {pageIdx + 1} of {totalPagesCount}
+                  </div>
+                )}
               </div>
-
-              {pages.length > 1 && (
-                <div className="text-center text-[10px] text-gray-400 mt-2 font-medium">
-                  Page {pageIdx + 1} of {pages.length}
-                </div>
-              )}
-            </div>
+            ) : (
+              <div className="mt-auto pt-2 pb-1 text-center text-[10px] text-gray-500 font-semibold border-t border-slate-200">
+                CarryBee Express Ltd. • IT Asset Send / Received Form • Page {pageIdx + 1} of {totalPagesCount}
+              </div>
+            )}
           </div>
         );
       })}

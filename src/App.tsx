@@ -3,6 +3,7 @@ import { CarryBeeFormData, DocumentPage } from './types/form';
 import { ALL_PRESETS } from './data/presets';
 import { createBlankCarryBeeForm } from './data/blankForm';
 import { getCurrentDateFormatted, ddmmyyyyToIso, isoToDdmmyyyy, getDocumentFileName } from './utils/dateUtils';
+import { partitionItemsIntoPages } from './utils/pagination';
 import { Toolbar } from './components/Toolbar';
 import { OfficialDocumentView } from './components/OfficialDocumentView';
 import { StandardTableEditor } from './components/StandardTableEditor';
@@ -156,7 +157,7 @@ export default function App() {
     if (formData.pages && formData.pages.length > 0) {
       return formData.pages.length;
     }
-    return 1;
+    return partitionItemsIntoPages(formData.standardItems).length;
   };
 
   const handleAddPage = () => {
